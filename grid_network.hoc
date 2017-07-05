@@ -1,0 +1,32 @@
+load_file("neuronTemp.hoc")
+
+begintemplate grid_network
+public cellArray
+
+objectvar cellArray[1], syn[1]
+
+proc init() {
+    numNeurons = $1
+    inhibProb = $2
+
+    step = 1000.0/(numNeurons)^(0.5)
+    h = numNeurons^0.5
+
+    objref cellArray[numNeurons]
+
+    // Create Neurons and place them on a grid of size 1mm X 1mm
+    Z = 0
+    d = 10
+    for i = 0, numNeurons-1 {
+        cellArray[i] = new procCell()
+        access cellArray[i].soma
+
+        pt3dclear()
+        Y = int(i/h)*step
+        X = (i%h)*step
+        pt3dadd(X, Y, Z, d)
+        pt3dadd(X, Y, Z + 20, d)
+    }
+
+}
+endtemplate grid_network
