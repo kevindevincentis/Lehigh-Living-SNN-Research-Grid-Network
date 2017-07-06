@@ -3,19 +3,28 @@ load_file("neuronTemp.hoc")
 begintemplate grid_network
 public cellArray
 
-objectvar cellArray[1], syn[1]
+objectvar cellArray[1], syn, r, initW
 
 proc init() {
     numNeurons = $1
     inhibProb = $2
+    mean = 0
+    sigma = 650
+    e_excite = 0 // For excitatory connections
+    e_inhibit = -80 // For inhibitory connections
+    pi = 3.1415926535897932384
 
     step = 1000.0/(numNeurons)^(0.5)
     h = numNeurons^0.5
 
+    r = new Random()
+    initW = new Random()
+    syn = new List()
+
     objref cellArray[numNeurons]
 
-    // Create Neurons and place them on a grid of size 1mm X 1mm
-    Z = 0
+    // Create Neurons and place them equally spaced on a grid of size 1mm X 1mm
+    Z = 0 // All neurons will be on the same XY plane
     d = 10
     for i = 0, numNeurons-1 {
         cellArray[i] = new procCell()
@@ -27,6 +36,34 @@ proc init() {
         pt3dadd(X, Y, Z, d)
         pt3dadd(X, Y, Z + 20, d)
     }
+
+    r.uniform(0,1)
+    initW.normal(0,0.001)
+    // Create connections based on guassian distribution wrt distance
+    for i = 0, numNeurons-1 {
+        curX = (i%h)*step
+        curY = int(i/h)*step
+        for j = 0, numNeurons-1 {
+            if (i == j) {continue}
+            // Calculated distance and probability of a connection
+            destX = (j%h)*step
+            destY = int(j/h)*step
+            dist = ((curX-destX)^2 + (curY-destY)^2)^0.5
+            normalizedDist = (dist - mean)/sigma
+            prob = 1/(2*pi)^.5 * exp(-(normalizedDist/2))
+
+            num = r.repick()
+            // If num <= prob, this means we have a successful connection
+            if (num <= prob) {
+                w = initW.repick()
+                while (w <= 0 || w > 0.01) {w = r.repick()}
+                cellArray[j].soma syn.append(new ExpSyn(0))
+                syn.object(syn.count()-1).e = e_excite
+                cellArray[i].soma cellArray[j].nclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
+            }
+        }
+    }
+
 
 }
 endtemplate grid_network
