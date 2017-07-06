@@ -4,10 +4,11 @@ begintemplate grid_network
 public cellArray
 
 objectvar cellArray[1], syn, r, initW
+double inhibConns[1]
 
 proc init() {
     numNeurons = $1
-    inhibProb = $2
+    inhibPerc = $2
     mean = 0
     sigma = 650
     e_excite = 0 // For excitatory connections
@@ -22,6 +23,8 @@ proc init() {
     syn = new List()
 
     objref cellArray[numNeurons]
+    double inhibConns[inhibPerc*numNeurons + 1]
+
 
     // Create Neurons and place them equally spaced on a grid of size 1mm X 1mm
     Z = 0 // All neurons will be on the same XY plane
@@ -35,6 +38,23 @@ proc init() {
         X = (i%h)*step
         pt3dadd(X, Y, Z, d)
         pt3dadd(X, Y, Z + 20, d)
+    }
+
+    // Designate inhibitory neurons
+    r.discunif(0, numNeurons-1)
+    for i = 0, numNeurons*inhibPerc-1 {
+        good = 0
+        while (!good){
+            good = 1
+            pick = r.repick()
+            for j = 0, i {
+                if (pick == inhibConns[j]) {
+                    good = 0
+                    break
+                }
+            }
+        }
+        inhibConns[i] = pick
     }
 
     r.uniform(0,1)
@@ -57,8 +77,14 @@ proc init() {
             if (num <= prob) {
                 w = initW.repick()
                 while (w <= 0 || w > 0.01) {w = r.repick()}
+                isInhibit = 0
+                for k = 0, numNeurons*inhibPerc-1{
+                    if (i == inhibConns[k]) {isInhibit = 1}
+                }
+                if (isInhibit) {e = e_inhibit}
+                if (!isInhibit) {e = e_excite}
                 cellArray[j].soma syn.append(new ExpSyn(0))
-                syn.object(syn.count()-1).e = e_excite
+                syn.object(syn.count()-1).e = e
                 cellArray[i].soma cellArray[j].nclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
             }
         }

@@ -4,7 +4,7 @@ from matplotlib import pyplot
 
 h('''load_file("grid_network.hoc")
 objref grid
-grid = new grid_network(100, 0)''')
+grid = new grid_network(100, 0.23)''')
 
 try:
     input('Exit by pressing a key')
