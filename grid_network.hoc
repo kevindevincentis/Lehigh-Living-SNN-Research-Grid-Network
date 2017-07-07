@@ -1,14 +1,18 @@
 load_file("neuronTemp.hoc")
 
 begintemplate grid_network
-public cellArray
+public cellArray, inputCells, outputs, inhibConns, syn, input
 
-objectvar cellArray[1], syn, r, initW
+objectvar cellArray[1], syn, r, initW, inputCells, outputs, inputs, inputSyn[1]
 double inhibConns[1]
 
 proc init() {
     numNeurons = $1
     inhibPerc = $2
+    inputSize = $3
+    inputL = inputSize^0.5
+    border = (numNeurons^0.5 - inputL)/2
+
     mean = 0
     sigma = 650
     e_excite = 0 // For excitatory connections
@@ -22,9 +26,14 @@ proc init() {
     initW = new Random()
     syn = new List()
 
-    objref cellArray[numNeurons]
+    objref cellArray[numNeurons], inputCells, outputs, inputSyn[inputSize], inputs
     double inhibConns[inhibPerc*numNeurons + 1]
+    inputCells = new List()
+    outputs = new List()
+    inputs = new List()
 
+    lowerB = border
+    upperB = border + inputL
 
     // Create Neurons and place them equally spaced on a grid of size 1mm X 1mm
     Z = 0 // All neurons will be on the same XY plane
@@ -33,9 +42,18 @@ proc init() {
         cellArray[i] = new procCell()
         access cellArray[i].soma
 
+        y = int(i/h)
+        x = (i%h)
+        // Designate cell as input or output
+        if (x >= lowerB && x <= upperB && y >= lowerB && y <= upperB) {
+            inputCells.append(cellArray[i])
+        } else {
+            outputs.append(cellArray[i])
+        }
+
         pt3dclear()
-        Y = int(i/h)*step
-        X = (i%h)*step
+        Y = y*step
+        X = x*step
         pt3dadd(X, Y, Z, d)
         pt3dadd(X, Y, Z + 20, d)
     }
@@ -90,6 +108,27 @@ proc init() {
         }
     }
 
+    // Set up the input stimulators
+    for i = 0, inputCells.count()-1 {
+        inputCells.object(i).soma inputSyn[i] = new ExpSyn(0)
+        inputSyn[i].e = e_excite
+        inputs.append(new NetStim(1))
+        inputs.object(i).noise = 0
+        inputs.object(i).start = 5
+        inputs.object(i).number = 30
+        inputCells.object(i).nclist.append(new NetCon(inputs.object(i), inputSyn[i], -15, 1, 1))
+    }
 
+
+}
+
+proc input() {local i
+    for i = 0, inputSize-1 {
+        w = $&1[i]
+        inputs.object(i).interval = (1.0)/(w)
+        inputs.object(i).number = 30
+        // Low frequency inputs do not stimulate neurons
+        if (w <= 1.0/90) {inputs.object(i).number = 0}
+    }
 }
 endtemplate grid_network
