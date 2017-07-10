@@ -13,7 +13,7 @@ images = vals['images']
 labels = vals['labels']
 labels = labels[0]
 
-cur = 1
+cur = 2
 
 img = images[cur]
 h('numInputs = 1')
@@ -27,7 +27,7 @@ h('grid.input(&img)')
 
 h('access grid.outputs.object(0).soma')
 
-h.tstop = 100
+h.tstop = 50
 h.run()
 
 try:
