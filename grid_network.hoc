@@ -1,7 +1,7 @@
 load_file("neuronTemp.hoc")
 
 begintemplate grid_network
-public cellArray, inputCells, outputs, inhibConns, syn, input
+public cellArray, inputCells, outputs, inhibConns, syn, inputs
 
 objectvar cellArray[1], syn, r, initW, inputCells, outputs, inputs, inputSyn[1]
 double inhibConns[1]
