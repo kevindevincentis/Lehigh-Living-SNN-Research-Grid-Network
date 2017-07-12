@@ -3,35 +3,37 @@ from neuron import h, gui
 from matplotlib import pyplot
 import copy
 
+# Create the network
 h('''load_file("grid_network.hoc")
 objref grid
 grid = new grid_network(500, 0.23, 196)''')
 
-print h.grid.outputs.count()
-
+# Load images to give to the network
 vals = sio.loadmat('../MNIST/training_values_compressed.mat')
 images = vals['images']
 labels = vals['labels']
 labels = labels[0]
 
+# Set up counting objects for spike detection
 h("objref outputCounts[grid.outputs.count()]")
 
 threshold = 0
 h('z = 0')
 for i in range(int(h.grid.outputs.count())):
     h.z = i
-    # outputs[i].record(h.nn.outCells[i].soma(0.5)._ref_v)
     h('grid.outputs.object(z).soma outputCounts[z] = new APCount(0.5)')
     h.outputCounts[i].thresh = threshold
 
 outputs = [0] * int(h.grid.outputs.count())
 
-results = [list() for i in range(10)]
+results = [list() for i in range(10)] # Variable to save data
 
+# Run the simulation many times to collect data points
 trials = 1000
 for cur in range(trials):
     print "Image %d" %cur
 
+    # Input the image
     img = images[cur]
     h('numInputs = 1')
     h.numInputs = len(img)
@@ -44,10 +46,11 @@ for cur in range(trials):
 
     h('access grid.outputs.object(0).soma')
 
-
+    # Run simulation
     h.tstop = 16
     h.run()
 
+    # Obtain output and update results
     for i in range(len(outputs)):
         outputs[i] = h.outputCounts[i].n
 
