@@ -13,7 +13,7 @@ images = vals['images']
 labels = vals['labels']
 labels = labels[0]
 
-cur = 2
+cur = 0
 
 img = images[cur]
 h('numInputs = 1')

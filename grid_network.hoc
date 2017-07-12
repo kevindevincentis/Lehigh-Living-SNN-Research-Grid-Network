@@ -1,7 +1,7 @@
 load_file("neuronTemp.hoc")
 
 begintemplate grid_network
-public cellArray, inputCells, outputs, inhibConns, syn, inputs
+public cellArray, inputCells, outputs, inhibConns, syn, input
 
 objectvar cellArray[1], syn, r, initW, inputCells, outputs, inputs, inputSyn[1]
 double inhibConns[1]
@@ -76,7 +76,7 @@ proc init() {
     }
 
     r.uniform(0,1)
-    initW.normal(0,0.001)
+    initW.normal(0,0.0001)
     // Create connections based on guassian distribution wrt distance
     for i = 0, numNeurons-1 {
         curX = (i%h)*step
@@ -115,7 +115,7 @@ proc init() {
         inputs.append(new NetStim(1))
         inputs.object(i).noise = 0
         inputs.object(i).start = 5
-        inputs.object(i).number = 30
+        inputs.object(i).number = 1
         inputCells.object(i).nclist.append(new NetCon(inputs.object(i), inputSyn[i], -15, 1, 1))
     }
 
@@ -126,7 +126,7 @@ proc input() {local i
     for i = 0, inputSize-1 {
         w = $&1[i]
         inputs.object(i).interval = (1.0)/(w)
-        inputs.object(i).number = 30
+        inputs.object(i).number = 1
         // Low frequency inputs do not stimulate neurons
         if (w <= 1.0/90) {inputs.object(i).number = 0}
     }

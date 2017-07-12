@@ -1,6 +1,7 @@
 import scipy.io as sio
 from neuron import h, gui
 from matplotlib import pyplot
+import copy
 
 h('''load_file("grid_network.hoc")
 objref grid
@@ -50,7 +51,7 @@ for cur in range(trials):
     for i in range(len(outputs)):
         outputs[i] = h.outputCounts[i].n
 
-    results[labels[cur]].append(outputs)
+    results[labels[cur]].append(copy.copy(outputs))
 
 # Save the results
 results = {'results': results}
