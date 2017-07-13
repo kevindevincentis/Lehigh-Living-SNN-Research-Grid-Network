@@ -12,7 +12,7 @@ images = vals['images']
 labels = vals['labels']
 labels = labels[0]
 
-cur = 0
+cur = 65
 
 # Input the image to the network
 img = images[cur]
@@ -29,6 +29,7 @@ h('access grid.outputs.object(0).soma')
 
 # Run the simulation
 h.tstop = 50
+h('xopen("output_sample.ses")')
 h.run()
 
 # Wait for input to exit to allow time for looking at output through GUI

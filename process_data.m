@@ -9,7 +9,7 @@ cell2mat(results(8)); cell2mat(results(9)); cell2mat(results(10))];
 
 % Use kmeans function to find the clusters
 % Run several times to find optimal result
-K = 15;
+K = 12; % Number of clusters to look for
 bestCluster = 0;
 for j = 1:100
     [idx, centers, sumd, dist] = kmeans(data, K, 'EmptyAction', 'singleton', 'Distance', 'Hamming', 'Start', 'plus');
@@ -63,7 +63,11 @@ for digit = results
     [~, winner] = max(counts);
 
     accuracy = counts(winner)/sum(counts) * 100;
-    printf('Digit %d, Assigned Cluster: %d, Accuracy: %d%%, Size: %d\n', actualDigit, winner, accuracy, sum(bestDist(:, winner)));
+
+    % Size is the distance from the cluster to its furthest member
+    possibilities = find((bestIdx == winner));
+    rad = max(bestDist(possibilities, winner));
+    printf('Digit %d, Assigned Cluster: %d, Accuracy: %d%%, Size: %d\n', actualDigit, winner, accuracy, rad);
     lastEnd = lastEnd+h;
     actualDigit = actualDigit + 1;
 end
