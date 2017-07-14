@@ -12,7 +12,7 @@ images = vals['images']
 labels = vals['labels']
 labels = labels[0]
 
-cur = 65
+cur = 4
 
 # Input the image to the network
 img = images[cur]

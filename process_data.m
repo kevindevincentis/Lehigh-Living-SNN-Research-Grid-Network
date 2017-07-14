@@ -9,10 +9,10 @@ cell2mat(results(8)); cell2mat(results(9)); cell2mat(results(10))];
 
 % Use kmeans function to find the clusters
 % Run several times to find optimal result
-K = 12; % Number of clusters to look for
+K = 15; % Number of clusters to look for
 bestCluster = 0;
 for j = 1:100
-    [idx, centers, sumd, dist] = kmeans(data, K, 'EmptyAction', 'singleton', 'Distance', 'Hamming', 'Start', 'plus');
+    [idx, centers, sumd, dist] = kmeans(data, K, 'EmptyAction', 'singleton', 'Distance', 'sqeuclidean', 'Start', 'plus');
     lastEnd = 0;
     actualDigit = 0;
     allWinners = [];
@@ -40,7 +40,7 @@ for j = 1:100
     end
 
     % Pick the best one
-    if (winnersCount >= 10 && mean(allAccuracy) > bestCluster)
+    if (winnersCount >= 8 && mean(allAccuracy) > bestCluster)
         bestCluster = mean(allAccuracy);
         bestIdx = idx;
         bestCenters = centers;
