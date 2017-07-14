@@ -46,9 +46,9 @@ proc init() {
         x = (i%h)
         // Designate cell as input or output
         if (x >= lowerB && x <= upperB && y >= lowerB && y <= upperB) {
-            inputCells.append(cellArray[i])
-        } else {
             outputs.append(cellArray[i])
+        } else {
+            inputCells.append(cellArray[i])
         }
 
         pt3dclear()
@@ -123,7 +123,7 @@ proc init() {
 }
 
 proc input() {local i
-    for i = 0, inputSize-1 {
+    for i = 0, numNeurons - inputSize - 1 {
         w = $&1[i]
         inputs.object(i).interval = (1.0)/(w)
         inputs.object(i).number = 1

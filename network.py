@@ -4,7 +4,7 @@ from matplotlib import pyplot
 
 h('''load_file("grid_network.hoc")
 objref grid
-grid = new grid_network(500, 0.23, 196)''')
+grid = new grid_network(500, 0.23, 304)''')
 
 # Load images to give to the network
 vals = sio.loadmat('../MNIST/training_values_compressed.mat')

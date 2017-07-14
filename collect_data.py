@@ -6,7 +6,7 @@ import copy
 # Create the network
 h('''load_file("grid_network.hoc")
 objref grid
-grid = new grid_network(500, 0.23, 196)''')
+grid = new grid_network(500, 0.23, 304)''')
 
 # Load images to give to the network
 vals = sio.loadmat('../MNIST/training_values_compressed.mat')
@@ -47,7 +47,7 @@ for cur in range(trials):
     h('access grid.outputs.object(0).soma')
 
     # Run simulation
-    h.tstop = 33
+    h.tstop = 16
     h.run()
 
     # Obtain output and update results
