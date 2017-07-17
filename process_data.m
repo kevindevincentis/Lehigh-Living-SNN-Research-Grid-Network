@@ -40,7 +40,7 @@ for j = 1:100
     end
 
     % Pick the best one
-    if (winnersCount >= 8 && mean(allAccuracy) > bestCluster)
+    if (winnersCount >= 10 && mean(allAccuracy) > bestCluster)
         bestCluster = mean(allAccuracy);
         bestIdx = idx;
         bestCenters = centers;
