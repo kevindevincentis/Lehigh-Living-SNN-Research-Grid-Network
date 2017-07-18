@@ -4,6 +4,7 @@ begintemplate grid_network
 public cellArray, inputCells, outputs, inhibConns, syn, input
 
 objectvar cellArray[1], syn, r, initW, inputCells, outputs, inputs, inputSyn[1]
+objref excitator, inhibitor
 double inhibConns[1]
 
 proc init() {
@@ -119,6 +120,17 @@ proc init() {
         inputCells.object(i).nclist.append(new NetCon(inputs.object(i), inputSyn[i], -15, 1, 1))
     }
 
+    // Create excitator
+    excitator = new NetStim(1)
+    excitator.noise = 0
+    excitator.start = 12
+    excitator.number = 1
+
+    inhibitor = new NetStim(1)
+    inhibitor.noise = 0
+    inhibitor.start = 12
+    inhibitor.number = 1
+
 
 }
 
@@ -129,6 +141,28 @@ proc input() {local i
         inputs.object(i).number = 1
         // Low frequency inputs do not stimulate neurons
         if (w <= 1.0/90) {inputs.object(i).number = 0}
+    }
+}
+
+proc set_inhibitor() {
+    for i = 0, outputs.count()-1{
+        w = $&1[i]
+        if (w == 0) {
+            outputs.object(i).soma syn.append(new ExpSyn(0))
+            syn.object(syn.count()-1).e = e_inhibit
+            outputs.object(i).nclist.append(new NetCon(inhibitor, syn.object(syn.count()-1), -15, 0, 1))
+        }
+    }
+}
+
+proc set_excitator() {
+    for i = 0, outputs.count()-1{
+        w = $&1[i]
+        if (w != 0) {
+            outputs.object(i).soma syn.append(new ExpSyn(0))
+            syn.object(syn.count()-1).e = e_excite
+            outputs.object(i).nclist.append(new NetCon(inhibitor, syn.object(syn.count()-1), -15, 0, 1))
+        }
     }
 }
 endtemplate grid_network
