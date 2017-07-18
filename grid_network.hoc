@@ -10,8 +10,8 @@ proc init() {
     numNeurons = $1
     inhibPerc = $2
     inputSize = $3
-    inputL = inputSize^0.5
-    border = (numNeurons^0.5 - inputL)/2
+    inputCols = (inputSize/int((numNeurons^0.5)))
+    border = (numNeurons^0.5 - inputCols*2)/2
 
     mean = 0
     sigma = 650
@@ -26,14 +26,12 @@ proc init() {
     initW = new Random()
     syn = new List()
 
-    objref cellArray[numNeurons], inputCells, outputs, inputSyn[inputSize], inputs
+    objref cellArray[numNeurons], inputCells, outputs, inputSyn[inputSize + 10], inputs
     double inhibConns[inhibPerc*numNeurons + 1]
     inputCells = new List()
     outputs = new List()
     inputs = new List()
 
-    lowerB = border
-    upperB = border + inputL
 
     // Create Neurons and place them equally spaced on a grid of size 1mm X 1mm
     Z = 0 // All neurons will be on the same XY plane
@@ -43,12 +41,12 @@ proc init() {
         access cellArray[i].soma
 
         y = int(i/h)
-        x = (i%h)
+        x = int(i%h)
         // Designate cell as input or output
-        if (x >= lowerB && x <= upperB && y >= lowerB && y <= upperB) {
-            outputs.append(cellArray[i])
-        } else {
+        if (x > border && x < border + inputCols*2 && x%2 == 0) {
             inputCells.append(cellArray[i])
+        } else {
+            outputs.append(cellArray[i])
         }
 
         pt3dclear()
@@ -57,6 +55,8 @@ proc init() {
         pt3dadd(X, Y, Z, d)
         pt3dadd(X, Y, Z + 20, d)
     }
+    print inputCells.count()
+    print outputs.count()
 
     // Designate inhibitory neurons
     r.discunif(0, numNeurons-1)
@@ -123,7 +123,7 @@ proc init() {
 }
 
 proc input() {local i
-    for i = 0, numNeurons - inputSize - 1 {
+    for i = 0, inputSize-1{
         w = $&1[i]
         inputs.object(i).interval = (1.0)/(w)
         inputs.object(i).number = 1

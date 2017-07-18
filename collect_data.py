@@ -6,7 +6,7 @@ import copy
 # Create the network
 h('''load_file("grid_network.hoc")
 objref grid
-grid = new grid_network(500, 0.23, 304)''')
+grid = new grid_network(500, 0.23, 196)''')
 
 # Load images to give to the network
 vals = sio.loadmat('../MNIST/training_values_compressed.mat')
@@ -29,7 +29,7 @@ outputs = [0] * int(h.grid.outputs.count())
 results = [list() for i in range(10)] # Variable to save data
 
 # Run the simulation many times to collect data points
-trials = 100
+trials = 1000
 for cur in range(trials):
     print "Image %d" %cur
 
