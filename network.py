@@ -25,6 +25,14 @@ for i in range(len(img)):
 
 h('grid.input(&img)')
 
+inhibit = [1] * 304
+h.numInputs = 304
+h('double inh[numInputs]')
+for i in range(len(inhibit)):
+    h.inh[i] = inhibit[i]
+
+h('grid.set_excitator(&inh)')
+
 h('access grid.outputs.object(0).soma')
 
 # Run the simulation
