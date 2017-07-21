@@ -72,6 +72,7 @@ for digit = results
     actualDigit = actualDigit + 1;
 end
 
+bestCenters = bestCenters >= 0.5;
 % Save the results
 save('-mat-binary', 'cluster_results.mat', 'bestIdx', 'bestCenters', 'bestSumd', 'bestDist');
 
