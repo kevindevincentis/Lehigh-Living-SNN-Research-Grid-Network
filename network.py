@@ -1,3 +1,4 @@
+# Kevin DeVincentis
 import scipy.io as sio
 from neuron import h, gui
 from matplotlib import pyplot

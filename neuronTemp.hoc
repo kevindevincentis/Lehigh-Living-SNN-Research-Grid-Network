@@ -1,3 +1,4 @@
+// Kevin DeVincentis
 begintemplate procCell
 public soma, nclist, updateInputWeights, Inclist, setInputWeights, idxList, curSize, getInputWeights
 

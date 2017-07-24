@@ -1,3 +1,5 @@
+// Kevin DeVincentis
+
 load_file("neuronTemp.hoc")
 
 begintemplate grid_network
