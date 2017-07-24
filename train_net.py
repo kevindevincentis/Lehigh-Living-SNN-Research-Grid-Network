@@ -16,7 +16,7 @@ def updateNeurons(h, updates, weightVals):
         h('grid.outputs.object(k).setInputWeights(&update)')
 
 # Create the network
-netSize = 100
+netSize = 500
 inputSize = 196
 outputSize = netSize - inputSize
 h('''load_file("grid_network.hoc")
@@ -53,7 +53,7 @@ for i in range(outputSize):
 
 
 # Run the simulation many times to collect data points
-setSize = 1000
+setSize = 100
 for cur in range(setSize):
     print "Image %d" %cur
 
@@ -84,7 +84,16 @@ for cur in range(setSize):
     updateNeurons(h, updates, weights)
 
 # Save the results
+# 2D matrix to store the trained weights
+allWeights = [0] * outputSize
+for i in range(outputSize):
+    allWeights[i] = list(h.grid.outputs.object(i).getInputWeights())
 
+# pyplot.show()
+
+# Save the results
+allWeights = {'allWeights': allWeights}
+sio.savemat('trained_weights', allWeights)
 
 try:
     input('Exit by pressing a key')

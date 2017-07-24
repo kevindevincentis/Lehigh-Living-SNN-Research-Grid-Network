@@ -1,4 +1,8 @@
 pkg load statistics
+
+args = argv();
+filename = args{1};
+
 tic()
 results = load('cluster_data.mat');
 results = results.results;
@@ -74,6 +78,6 @@ end
 
 bestCenters = bestCenters >= 0.5;
 % Save the results
-save('-mat-binary', 'cluster_results.mat', 'bestIdx', 'bestCenters', 'bestSumd', 'bestDist');
+save('-mat-binary', filename, 'bestIdx', 'bestCenters', 'bestSumd', 'bestDist');
 
 toc()

@@ -2,14 +2,34 @@ import scipy.io as sio
 from neuron import h, gui
 from matplotlib import pyplot
 import copy
+import sys
+
+# Obtain the type of weights (trained or random) from the command line
+weightType = sys.argv[1]
+imgSource = sys.argv[2]
 
 # Create the network
 h('''load_file("grid_network.hoc")
 objref grid
 grid = new grid_network(500, 0.23, 196)''')
 
+if (weightType.lower() == "trained"):
+    weights = sio.loadmat('./trained_weights.mat')
+    weights = weights['allWeights']
+    weights = weights[0]
+    h('k = 0')
+
+    for i in range(len(weights)):
+        h.k = i
+
+        h('size = grid.outputs.object(k).curSize')
+        h('double update[size]')
+        for j in range(int(h.size)):
+            h.update[j] = weights[i][0][j]
+        h('grid.outputs.object(k).setInputWeights(&update)')
+
 # Load images to give to the network
-vals = sio.loadmat('../MNIST/training_values_compressed.mat')
+vals = sio.loadmat(imgSource)
 images = vals['images']
 labels = vals['labels']
 labels = labels[0]
@@ -29,7 +49,7 @@ outputs = [0] * int(h.grid.outputs.count())
 results = [list() for i in range(10)] # Variable to save data
 
 # Run the simulation many times to collect data points
-trials = 1000
+trials = 100
 for cur in range(trials):
     print "Image %d" %cur
 
@@ -58,7 +78,9 @@ for cur in range(trials):
 
 # Save the results
 results = {'results': results}
-sio.savemat('cluster_data', results)
+if (weightType.lower() == "trained"):
+    sio.savemat('trained_cluster_data', results)
+else: sio.savemat('cluster_data', results)
 
 try:
     input('Exit by pressing a key')
