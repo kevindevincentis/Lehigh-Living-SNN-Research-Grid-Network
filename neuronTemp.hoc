@@ -1,4 +1,5 @@
 // Kevin DeVincentis
+// Template for the cells to be used in a neural network
 begintemplate procCell
 public soma, nclist, updateInputWeights, Inclist, setInputWeights, idxList, curSize, getInputWeights
 
@@ -64,6 +65,7 @@ obfunc getWeights() {
 }
 
 proc updateInputWeights() {local i, delta, curWeight, newWeight
+    print "Before"
     for i = 0, Inclist.count()-1 {
         delta = $&1[i]
         curWeight = Inclist.object(i).weight
@@ -72,6 +74,7 @@ proc updateInputWeights() {local i, delta, curWeight, newWeight
         if (newWeight > 0.2) {newWeight = 0.2}
         Inclist.object(i).weight = newWeight
     }
+    print "After"
 }
 
 proc setInputWeights() {local i, newWeight

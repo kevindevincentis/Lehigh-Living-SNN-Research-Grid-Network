@@ -1,4 +1,7 @@
 % Kevin DeVincentis
+% evaluates the response from a trained neural network
+% User inputs the clusters to be used, the pre-trained data points,
+% and post-trained data points
 args = argv();
 cluster_source = args{1};
 data_source = args{2};

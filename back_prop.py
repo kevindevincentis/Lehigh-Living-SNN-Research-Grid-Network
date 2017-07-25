@@ -5,8 +5,7 @@ def calc_weight_changes(outputs, truths, inputs, h):
     LEARNING_RATE = .001
     nWeights = 196
     err = calculate_total_error(outputs, truths)
-    print outputs
-    print err
+    # print outputs
     return (train(outputs, truths, inputs, nWeights, LEARNING_RATE, h), err)
 
 def train(outputs, truths, inputs, nWeights, LEARNING_RATE, h):
@@ -15,15 +14,13 @@ def train(outputs, truths, inputs, nWeights, LEARNING_RATE, h):
 
     weightDetlas = [0] * nNeurons
 
-    # # Only modify weights of neurons which were wrong or should be strengthened
-    # modify = set()
-    # truths = list(truths)
-    # modify.add(truths.index(max(truths)))
-    # best_freq = max(outputs)
-    # for i in range(nNeurons):
-    #     if outputs[i] == best_freq: modify.add(i)
+    # Only modify weights of neurons which were wrong or should be strengthened
+    modify = set()
+    truths = list(truths)
+    for i in range(nNeurons):
+        if outputs[i] != truths[i]: modify.add(i)
     #
-    # print modify
+    print modify
 
 
     for o in range(nNeurons):
@@ -35,9 +32,9 @@ def train(outputs, truths, inputs, nWeights, LEARNING_RATE, h):
     for o in range(nNeurons):
         temp = list()
         h.idx = o
-        # if o in modify:
         h('val = grid.outputs.object(idx).curSize')
         curSize = int(h.val)
+        # if o in modify:
         for w_ho in range(curSize):
             idx = h.grid.outputs.object(o).idxList[w_ho]
 
@@ -47,7 +44,8 @@ def train(outputs, truths, inputs, nWeights, LEARNING_RATE, h):
             pd_error_wrt_weight = pd_errors_wrt_output_neuron_total_net_input[o] * inp
 
             temp.append(-LEARNING_RATE * pd_error_wrt_weight)
-            # if weightDetlas[o][w_ho] != 0: print weightDetlas[o][w_ho]
+            if temp[len(temp) - 1] != 0: print temp[len(temp) - 1]
+        # else: temp = [0] * curSize
         weightDetlas[o] = copy.copy(temp)
 
     return weightDetlas
@@ -56,7 +54,7 @@ def calculate_total_error(outputs, truths):
     total_error = 0
     for o in range(len(truths)):
         total_error += calculate_error(outputs[o], truths[o])
-    return total_error/10.0
+    return total_error/len(truths)
 
 def calculate_pd_error_wrt_total_net_input(target_output, output):
     return calculate_pd_error_wrt_output(output, target_output) * calculate_pd_total_net_input_wrt_input(output);

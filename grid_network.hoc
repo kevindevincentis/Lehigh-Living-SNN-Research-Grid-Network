@@ -1,5 +1,6 @@
 // Kevin DeVincentis
-
+// Template for a Grid shaped network of neurons where connections are based on
+// A Gaussian probability distribution
 load_file("neuronTemp.hoc")
 
 begintemplate grid_network

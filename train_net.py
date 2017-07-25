@@ -1,5 +1,5 @@
 # Kevin DeVincentis
-
+# Trains a grid_network using back-propagation
 import scipy.io as sio
 from neuron import h, gui
 from matplotlib import pyplot
@@ -20,10 +20,14 @@ def updateNeurons(h, updates, weightVals):
 # Create the network
 netSize = 500
 inputSize = 196
+h('netSize = 0')
+h('inputSize = 0')
+h.netSize = netSize
+h.inputSize = inputSize
 outputSize = netSize - inputSize
 h('''load_file("grid_network.hoc")
 objref grid
-grid = new grid_network(500, 0.23, 196)''')
+grid = new grid_network(netSize, 0.23, inputSize)''')
 
 # Load images to give to the network
 vals = sio.loadmat('../MNIST/training_values_compressed.mat')
@@ -55,35 +59,42 @@ for i in range(outputSize):
 
 
 # Run the simulation many times to collect data points
-setSize = 100
+setSize = 2
 for cur in range(setSize):
-    print "Image %d" %cur
+    Iter = 0
+    err = 1
+    lastErr = 0
+    while (abs(err - lastErr) > .01):
+        lastErr = err
+        print "Image %d, Iter: %d" %(cur, Iter)
 
-    # Input the image
-    img = images[cur]
-    h('numInputs = 1')
-    h.numInputs = len(img)
-    h('double img[numInputs]')
+        # Input the image
+        img = images[cur]
+        h('numInputs = 1')
+        h.numInputs = len(img)
+        h('double img[numInputs]')
 
-    for i in range(len(img)):
-        h.img[i] = img[i]
+        for i in range(len(img)):
+            h.img[i] = img[i]
 
-    h('grid.input(&img)')
+        h('grid.input(&img)')
 
-    h('access grid.outputs.object(0).soma')
+        h('access grid.outputs.object(0).soma')
 
-    # Run simulation
-    h.tstop = 16
-    h.run()
+        # Run simulation
+        h.tstop = 16
+        h.run()
 
-    # Obtain output and update results
-    for i in range(len(outputs)):
-        outputs[i] = h.outputCounts[i].n
+        # Obtain output and update results
+        for i in range(len(outputs)):
+            outputs[i] = h.outputCounts[i].n
 
-    (updates, err) = calc_weight_changes(outputs, centers[labels[cur]], img, h)
+        (updates, err) = calc_weight_changes(outputs, centers[labels[cur]], img, h)
 
-    # Update the weights of the network
-    updateNeurons(h, updates, weights)
+        # Update the weights of the network
+        updateNeurons(h, updates, weights)
+        print err
+        Iter += 1
 
 # Save the results
 # 2D matrix to store the trained weights
