@@ -64,6 +64,7 @@ obfunc getWeights() {
     return weights
 }
 
+// Update the weights with an array of deltas. Only update connections to Inputs
 proc updateInputWeights() {local i, delta, curWeight, newWeight
     print "Before"
     for i = 0, Inclist.count()-1 {
@@ -77,6 +78,7 @@ proc updateInputWeights() {local i, delta, curWeight, newWeight
     print "After"
 }
 
+// Update the weights with an array of new values. Only update connections to Inputs
 proc setInputWeights() {local i, newWeight
     for i = 0, Inclist.count()-1 {
         newWeight = $&1[i]
@@ -86,6 +88,7 @@ proc setInputWeights() {local i, newWeight
     }
 }
 
+// Return the synaptic weights in a vector. Only return connections to Inputs
 obfunc getInputWeights() {
     objref weights
     weights = new Vector(Inclist.count())
