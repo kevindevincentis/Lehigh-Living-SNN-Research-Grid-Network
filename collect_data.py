@@ -29,7 +29,7 @@ outputs = [0] * int(h.grid.outputs.count())
 results = [list() for i in range(10)] # Variable to save data
 
 # Run the simulation many times to collect data points
-trials = 100
+trials = 1000
 for cur in range(trials):
     print "Image %d" %cur
 
@@ -47,7 +47,7 @@ for cur in range(trials):
     h('access grid.outputs.object(0).soma')
 
     # Run simulation
-    h.tstop = 33
+    h.tstop = 16
     h.run()
 
     # Obtain output and update results
