@@ -1,4 +1,11 @@
+% Kevin DeVincentis
+% Clusters data points and identfies best cluster based on some metrics
+% Saves the results in a filen specified by the user
 pkg load statistics
+
+args = argv();
+filename = args{1};
+
 tic()
 results = load('cluster_data.mat');
 results = results.results;
@@ -18,6 +25,7 @@ for j = 1:100
     allWinners = [];
     winnersCount = 0;
     allAccuracy = zeros(10,1);
+    cluster_assignments = zeros(1, 10);
     % Analyze how well the clusters correlate to the digits
     for digit = results
         digit = cell2mat(digit);
@@ -35,6 +43,7 @@ for j = 1:100
 
         accuracy = counts(winner)/sum(counts) * 100;
         allAccuracy(actualDigit + 1) = accuracy;
+        cluster_assignments(actualDigit + 1) = winner;
         lastEnd = lastEnd+h;
         actualDigit = actualDigit + 1;
     end
@@ -72,7 +81,9 @@ for digit = results
     actualDigit = actualDigit + 1;
 end
 
+bestCenters = bestCenters >= 0.5;
+bestCenters = bestCenters(cluster_assignments, :);
 % Save the results
-save('-mat-binary', 'cluster_results.mat', 'bestIdx', 'bestCenters', 'bestSumd', 'bestDist');
+save('-mat-binary', filename, 'bestIdx', 'bestCenters', 'bestSumd', 'bestDist');
 
 toc()

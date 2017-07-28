@@ -1,7 +1,10 @@
+// Kevin DeVincentis
+// Template for a Grid shaped network of neurons where connections are based on
+// A Gaussian probability distribution
 load_file("neuronTemp.hoc")
 
 begintemplate grid_network
-public cellArray, inputCells, outputs, inhibConns, syn, input, set_excitator, set_inhibitor
+public cellArray, inputCells, outputs, inhibConns, syn, input, set_excitator, set_inhibitor, inputSize
 
 objectvar cellArray[1], syn, r, initW, inputCells, outputs, inputs, inputSyn[1]
 objref excitator, inhibitor
@@ -40,7 +43,7 @@ upperB = border + inputL
 Z = 0 // All neurons will be on the same XY plane
 d = 10
 for i = 0, numNeurons-1 {
-    cellArray[i] = new procCell()
+    cellArray[i] = new procCell(inputSize)
     access cellArray[i].soma
 
     y = int(i/h)
@@ -82,8 +85,10 @@ for i = 0, numNeurons-1 {
     initW.normal(0,0.0001)
     // Create connections based on guassian distribution wrt distance
     for i = 0, numNeurons-1 {
-        curX = (i%h)*step
-        curY = int(i/h)*step
+        X = (i%h)
+        Y = int(i/h)
+        curX = X*step
+        curY = Y*step
         for j = 0, numNeurons-1 {
             if (i == j) {continue}
             // Calculated distance and probability of a connection
@@ -106,7 +111,17 @@ for i = 0, numNeurons-1 {
                 if (!isInhibit) {e = e_excite}
                 cellArray[j].soma syn.append(new ExpSyn(0))
                 syn.object(syn.count()-1).e = e
-                cellArray[i].soma cellArray[j].nclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
+                // Add to correct list of destination cell
+                if (X >= lowerB && X <= upperB && Y >= lowerB && Y <= upperB) {
+                    cellArray[i].soma cellArray[j].Inclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
+                    // Add the index of the input to the list
+                    idx = inputCells.index(cellArray[i])
+                    cellArray[j].idxList[cellArray[j].curSize] = idx
+                    cellArray[j].curSize += 1
+
+                } else {
+                    cellArray[i].soma cellArray[j].nclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
+                }
             }
         }
     }
@@ -128,6 +143,7 @@ for i = 0, numNeurons-1 {
     excitator.start = 11
     excitator.number = 1
 
+    // Create inhibitor
     inhibitor = new NetStim(1)
     inhibitor.noise = 0
     inhibitor.start = 11.5
