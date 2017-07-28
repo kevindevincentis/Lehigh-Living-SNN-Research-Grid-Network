@@ -47,7 +47,7 @@ for cur in range(trials):
     h('access grid.outputs.object(0).soma')
 
     # Run simulation
-    h.tstop = 16
+    h.tstop = 33
     h.run()
 
     # Obtain output and update results

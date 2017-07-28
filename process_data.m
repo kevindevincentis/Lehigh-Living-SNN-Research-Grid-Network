@@ -12,7 +12,7 @@ cell2mat(results(8)); cell2mat(results(9)); cell2mat(results(10))];
 K = 15; % Number of clusters to look for
 bestCluster = 0;
 for j = 1:500
-    [idx, centers, sumd, dist] = kmeans(data, K, 'EmptyAction', 'singleton', 'Distance', 'hamming', 'Start', 'plus');
+    [idx, centers, sumd, dist] = kmeans(data, K, 'EmptyAction', 'singleton', 'Distance', 'sqeuclidean', 'Start', 'plus');
     lastEnd = 0;
     actualDigit = 0;
     allWinners = [];
