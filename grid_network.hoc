@@ -37,13 +37,13 @@ proc init() {
     Z = 0 // All neurons will be on the same XY plane
     d = 10
     for i = 0, numNeurons-1 {
-        cellArray[i] = new procCell()
+        cellArray[i] = new procCell(inputSize)
         access cellArray[i].soma
 
         y = int(i/h)
         x = int(i%h)
         // Designate cell as input or output
-        if (x > border && x < border + inputCols*2 && x%2 == 0) {
+        if (x > border && x < border + inputCols*2 && x%2 == 0 && inputCells.count() < inputSize) {
             inputCells.append(cellArray[i])
         } else {
             outputs.append(cellArray[i])

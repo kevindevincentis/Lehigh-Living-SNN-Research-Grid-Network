@@ -1,13 +1,20 @@
+// Kevin DeVincentis
+// Template for the cells to be used in a neural network
 begintemplate procCell
-public soma, nclist, updateWeights, Inclist, setWeights
+public soma, nclist, updateInputWeights, Inclist, setInputWeights, idxList, curSize, getInputWeights
 
 create soma
 objectvar nclist, weightList, Inclist, weights
+double idxList[1], curSize[1]
 
 
 proc init() {
+    maxIdxSize = $1
 
     create soma
+    double idxList[maxIdxSize], curSize[1]
+    curSize = 0
+
 
     nclist = new List()
     Inclist = new List()
@@ -53,6 +60,40 @@ obfunc getWeights() {
     weights = new Vector(nclist.count())
     for i = 0, nclist.count()-1 {
         weights.x[i] = nclist.object(i).weight
+    }
+    return weights
+}
+
+// Update the weights with an array of deltas. Only update connections to Inputs
+proc updateInputWeights() {local i, delta, curWeight, newWeight
+    print "Before"
+    for i = 0, Inclist.count()-1 {
+        delta = $&1[i]
+        curWeight = Inclist.object(i).weight
+        newWeight = curWeight + delta
+        if (newWeight < 0) {newWeight = 0}
+        if (newWeight > 0.2) {newWeight = 0.2}
+        Inclist.object(i).weight = newWeight
+    }
+    print "After"
+}
+
+// Update the weights with an array of new values. Only update connections to Inputs
+proc setInputWeights() {local i, newWeight
+    for i = 0, Inclist.count()-1 {
+        newWeight = $&1[i]
+        if (newWeight < 0) {newWeight = 0}
+        if (newWeight > 0.2) {newWeight = 0.2}
+        Inclist.object(i).weight = newWeight
+    }
+}
+
+// Return the synaptic weights in a vector. Only return connections to Inputs
+obfunc getInputWeights() {
+    objref weights
+    weights = new Vector(Inclist.count())
+    for i = 0, Inclist.count()-1 {
+        weights.x[i] = Inclist.object(i).weight
     }
     return weights
 }
