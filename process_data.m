@@ -18,8 +18,8 @@ cell2mat(results(8)); cell2mat(results(9)); cell2mat(results(10))];
 % Run several times to find optimal result
 K = 15; % Number of clusters to look for
 bestCluster = 0;
-for j = 1:100
-    [idx, centers, sumd, dist] = kmeans(data, K, 'EmptyAction', 'singleton', 'Distance', 'hamming', 'Start', 'plus');
+for j = 1:1
+    [idx, centers, sumd, dist] = myKmeans(data, K);
     lastEnd = 0;
     actualDigit = 0;
     allWinners = [];
@@ -83,6 +83,9 @@ end
 
 bestCenters = bestCenters >= 0.5;
 bestCenters = bestCenters(cluster_assignments, :);
+
+% Re-evaluate idices
+[bestIdx, bestDist] = getDist(data, bestCenters);
 % Save the results
 save('-mat-binary', filename, 'bestIdx', 'bestCenters', 'bestSumd', 'bestDist');
 

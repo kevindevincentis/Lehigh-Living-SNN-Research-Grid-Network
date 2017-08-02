@@ -79,8 +79,10 @@ proc init() {
     initW.normal(0,0.0001)
     // Create connections based on guassian distribution wrt distance
     for i = 0, numNeurons-1 {
-        curX = (i%h)*step
-        curY = int(i/h)*step
+        X = int(i%h)
+        Y = int(i/h)
+        curX = X*step
+        curY = Y*step
         for j = 0, numNeurons-1 {
             if (i == j) {continue}
             // Calculated distance and probability of a connection
@@ -103,7 +105,17 @@ proc init() {
                 if (!isInhibit) {e = e_excite}
                 cellArray[j].soma syn.append(new ExpSyn(0))
                 syn.object(syn.count()-1).e = e
-                cellArray[i].soma cellArray[j].nclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
+                // Add to correct list of destination cell
+                if (X > border && X < border + inputCols*2 && X%2 == 0) {
+                    cellArray[i].soma cellArray[j].Inclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
+                    // Add the index of the input to the list
+                    idx = inputCells.index(cellArray[i])
+                    cellArray[j].idxList[cellArray[j].curSize] = idx
+                    cellArray[j].curSize += 1
+
+                } else {
+                    cellArray[i].soma cellArray[j].nclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
+                }
             }
         }
     }

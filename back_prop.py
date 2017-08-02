@@ -17,6 +17,8 @@ def train(outputs, truths, inputs, nWeights, LEARNING_RATE, h):
     # Only modify weights of neurons which were wrong or should be strengthened
     modify = set()
     truths = list(truths)
+    print len(outputs)
+    print len(truths)
     for i in range(nNeurons):
         if outputs[i] != truths[i]: modify.add(i)
     #

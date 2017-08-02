@@ -36,7 +36,7 @@ labels = vals['labels']
 labels = labels[0]
 
 # Load cluster centers
-data = sio.loadmat('./results/rows_cluster_results.mat')
+data = sio.loadmat('cluster_results.mat')
 centers = data['bestCenters']
 print centers
 
@@ -59,7 +59,7 @@ for i in range(outputSize):
 
 
 # Run the simulation many times to collect data points
-setSize = 2
+setSize = 100
 for cur in range(setSize):
     Iter = 0
     err = 1
