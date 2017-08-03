@@ -18,8 +18,9 @@ cell2mat(results(8)); cell2mat(results(9)); cell2mat(results(10))];
 % Run several times to find optimal result
 K = 15; % Number of clusters to look for
 bestCluster = 0;
-for j = 1:1
-    [idx, centers, sumd, dist] = myKmeans(data, K);
+W = 30; % Maximum number of ones allowed in a bitvector for clustering
+for j = 1:500
+    [idx, centers, sumd, dist] = myKmeans(data, K, W);
     lastEnd = 0;
     actualDigit = 0;
     allWinners = [];
@@ -49,7 +50,7 @@ for j = 1:1
     end
 
     % Pick the best one
-    if (winnersCount >= 10 && mean(allAccuracy) > bestCluster)
+    if (winnersCount >= 5 && mean(allAccuracy) > bestCluster)
         bestCluster = mean(allAccuracy);
         bestIdx = idx;
         bestCenters = centers;
@@ -75,7 +76,7 @@ for digit = results
 
     % Size is the distance from the cluster to its furthest member
     possibilities = find((bestIdx == winner));
-    rad = max(bestDist(possibilities, winner));
+    rad = min(bestDist(possibilities, winner));
     printf('Digit %d, Assigned Cluster: %d, Accuracy: %d%%, Size: %d\n', actualDigit, winner, accuracy, rad);
     lastEnd = lastEnd+h;
     actualDigit = actualDigit + 1;
