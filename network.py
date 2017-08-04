@@ -36,7 +36,7 @@ labels = vals['labels']
 labels = labels[0]
 print weights[labels[cur]]
 
-data = sio.loadmat('cluster_results.mat')
+data = sio.loadmat('basic_cluster_results_ham.mat')
 centers = data['bestCenters']
 
 h("objref outputCounts[grid.outputs.count()]")

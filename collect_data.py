@@ -84,7 +84,7 @@ for cur in range(trials):
 # Save the results
 results = {'results': results}
 if (weightType.lower() == "trained"):
-    sio.savemat('trained_cluster_data', results)
+    sio.savemat('no_kmeans_trained_cluster_data', results)
 else: sio.savemat('cluster_data', results)
 
 try:
