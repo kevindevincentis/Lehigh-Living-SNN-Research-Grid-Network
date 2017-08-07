@@ -1,3 +1,7 @@
+% Function finds the distance between N data points and K centers.
+% Returns dist, a matrix of N X K representing the distance between each point (row)
+% and center (cloumn).
+% Returns idx, a vector of N X 1 showing to which each point is closest
 function [idx, dist] = getDist(data, centers, distance)
     warning('off', 'Octave:broadcast');
 
