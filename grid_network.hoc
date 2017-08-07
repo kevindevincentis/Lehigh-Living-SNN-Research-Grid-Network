@@ -94,7 +94,7 @@ proc init() {
 
             num = r.repick()
             // If num <= prob, this means we have a successful connection
-            if (num <= prob) {
+            if (num <= prob || (X > border && X < border + inputCols*2 && X%2 == 0)) {
                 w = initW.repick()
                 while (w <= 0 || w > 0.01) {w = r.repick()}
                 isInhibit = 0
@@ -106,7 +106,7 @@ proc init() {
                 cellArray[j].soma syn.append(new ExpSyn(0))
                 syn.object(syn.count()-1).e = e
                 // Add to correct list of destination cell
-                if (X > border && X < border + inputCols*2 && X%2 == 0) {
+                if (X > border && X < border + inputCols*2 && X%2 == 0 && cellArray[j].curSize < 196) {
                     cellArray[i].soma cellArray[j].Inclist.append(new NetCon(&v(1), syn.object(syn.count()-1), -15, 5, w))
                     // Add the index of the input to the list
                     idx = inputCells.index(cellArray[i])

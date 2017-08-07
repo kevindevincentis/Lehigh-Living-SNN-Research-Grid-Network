@@ -28,18 +28,19 @@ if (weightType.lower() == "trained"):
             h.update[j] = weights[i][0][j]
         h('grid.outputs.object(k).setInputWeights(&update)')
 
+    print weights[labels[cur]]
 
 # Load images to give to the network
 vals = sio.loadmat('../MNIST/training_values_compressed.mat')
 images = vals['images']
 labels = vals['labels']
 labels = labels[0]
-print weights[labels[cur]]
 
 data = sio.loadmat('basic_cluster_results_ham.mat')
 centers = data['bestCenters']
 
 h("objref outputCounts[grid.outputs.count()]")
+
 
 threshold = 0
 h('z = 0')
