@@ -4,7 +4,9 @@ import scipy.io as sio
 from neuron import h, gui
 from matplotlib import pyplot
 from back_prop import calc_weight_changes
+import sys
 
+setSize = int(sys.argv[1])
 def updateNeurons(h, updates, weightVals):
     h('k = 0')
     for i in range(len(updates)):
@@ -36,7 +38,7 @@ labels = vals['labels']
 labels = labels[0]
 
 # Load cluster centers
-data = sio.loadmat('cluster_results.mat')
+data = sio.loadmat('basic_cluster_results_ham.mat')
 centers = data['bestCenters']
 print centers
 
@@ -59,7 +61,6 @@ for i in range(outputSize):
 
 
 # Run the simulation many times to collect data points
-setSize = 2
 for cur in range(setSize):
     Iter = 0
     err = 1
