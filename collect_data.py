@@ -54,7 +54,7 @@ outputs = [0] * int(h.grid.outputs.count())
 results = [list() for i in range(10)] # Variable to save data
 
 # Run the simulation many times to collect data points
-trials = 1000
+trials = 10000
 for cur in range(trials):
     print "Image %d" %cur
 
@@ -85,7 +85,7 @@ for cur in range(trials):
 results = {'results': results}
 if (weightType.lower() == "trained"):
     sio.savemat('no_kmeans_trained_cluster_data', results)
-else: sio.savemat('cluster_data', results)
+else: sio.savemat('large_cluster_data', results)
 
 try:
     input('Exit by pressing a key')

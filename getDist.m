@@ -2,7 +2,7 @@ function [idx, dist] = getDist(data, centers, distance)
     warning('off', 'Octave:broadcast');
 
     if nargin < 3
-        distance = 'overlap';
+        distance = 'hamming';
     end
     K = size(centers, 1);
     numPoints = size(data,1);
