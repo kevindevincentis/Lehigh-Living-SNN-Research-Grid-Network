@@ -48,9 +48,10 @@ printf('Total Correct: %d%%\n', totalAcc/totalPoints * 100);
 bestCenters = bestCenters >= 0.5;
 numCenters = size(bestCenters,1);
 [~, dist] = getDist(bestCenters, bestCenters, distance);
-dist = W - dist
-sum(bestCenters(2,:))
-
+if (lower(distance) == 'overlap')
+    dist = W - dist;
+end
+dist
 realDist = zeros(45,1);
 counter = 1;
 for i = 1:numCenters
