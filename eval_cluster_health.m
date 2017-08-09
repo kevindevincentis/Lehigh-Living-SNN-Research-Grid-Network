@@ -47,18 +47,10 @@ printf('Total Correct: %d%%\n', totalAcc/totalPoints * 100);
 % Find distance between centers
 bestCenters = bestCenters >= 0.5;
 numCenters = size(bestCenters,1);
-dist = zeros(numCenters);
-for row = 1:numCenters
-    dataPoint = bestCenters(row, :);
-    if (lower(distance) == 'hamming')
-        d = sum((dataPoint ~= bestCenters), 2)';
-    end
-    if (lower(distance) == 'overlap')
-        d = W - sum((dataPoint & bestCenters), 2)';
-    end
-    dist(row, :) = d;
+[~, dist] = getDist(bestCenters, bestCenters, distance);
+if (lower(distance) == 'overlap')
+    dist = W - dist;
 end
-
 realDist = zeros(45,1);
 counter = 1;
 for i = 1:numCenters
