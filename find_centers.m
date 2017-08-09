@@ -10,21 +10,22 @@ distance = args{2};
 filename = args{3};
 W = 30;
 
-% results = load(source);
-% results = results.results;
-% numDigits = size(results, 2);
-% D = size(cell2mat(results(1)), 2);
+results = load(source);
+results = results.results;
+numDigits = size(results, 2);
+D = size(cell2mat(results(1)), 2);
 
-vals = load('../MNIST/training_values_compressed.mat');
-images = vals.images > 1/100;
-labels = vals.labels;
-numDigits = 10;
-D = 196;
+% vals = load('../MNIST/training_values_compressed.mat');
+% images = vals.images > 1/100;
+% labels = vals.labels;
+% numDigits = 10;
+% D = 196;
 
 bestCenters = zeros(numDigits, D);
 for i = 1:numDigits
-    idxs = find(labels == (i-1));
-    data = images(idxs, :);
+    % idxs = find(labels == (i-1));
+    % data = images(idxs, :);
+    data = cell2mat(results(i));
 
     if (lower(distance) == 'hamming')
         tot = size(data, 1);
@@ -46,7 +47,10 @@ for i = 1:numDigits
 end
 bestCenters;
 
-data = images;
+% data = images;
+data = [cell2mat(results(1)); cell2mat(results(2)); cell2mat(results(3));
+cell2mat(results(4)); cell2mat(results(5)); cell2mat(results(6)); cell2mat(results(7));
+cell2mat(results(8)); cell2mat(results(9)); cell2mat(results(10))];
 
 [bestIdx, bestDist] = getDist(data, bestCenters, distance);
 
