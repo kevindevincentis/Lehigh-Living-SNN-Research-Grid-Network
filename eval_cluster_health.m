@@ -14,7 +14,7 @@ if (lower(distance) == 'overlap')
 end
 bestCenters = results.bestCenters;
 
-data = load('cluster_data.mat');
+data = load('new_trained_cluster_data.mat');
 data = data.results;
 numDigits = size(data, 2);
 
@@ -35,7 +35,7 @@ totalPoints = 0;
 for i = 1:numDigits
     % idxs = find(labels == (i-1));
     % digit = images(idxs, :);
-    digit = cell2mat(newData(i));
+    digit = cell2mat(data(i));
     [h, w] = size(digit);
     counts = zeros(K, 1);
 
