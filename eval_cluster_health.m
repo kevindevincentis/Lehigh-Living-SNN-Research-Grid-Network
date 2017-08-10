@@ -13,8 +13,17 @@ if (lower(distance) == 'overlap')
     bestDist = W - bestDist;
 end
 bestCenters = results.bestCenters;
+
 data = load('cluster_data.mat');
 data = data.results;
+numDigits = size(data, 2);
+
+
+% vals = load('../MNIST/training_values_compressed.mat');
+% images = vals.images > 1/100;
+% allNewData = images;
+% labels = vals.labels;
+% numDigits = 10;
 
 K = 15;
 lastEnd = 0;
@@ -23,8 +32,10 @@ rads = zeros(10,1);
 cluster_assignments = zeros(10,1);
 totalAcc = 0;
 totalPoints = 0;
-for digit = data
-    digit = cell2mat(digit);
+for i = 1:numDigits
+    % idxs = find(labels == (i-1));
+    % digit = images(idxs, :);
+    digit = cell2mat(newData(i));
     [h, w] = size(digit);
     counts = zeros(K, 1);
 

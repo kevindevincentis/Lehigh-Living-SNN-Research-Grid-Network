@@ -38,7 +38,7 @@ for i = 1:numDigits
         sums = sum(data, 1);
         [rankedSums, idxSums] = sort((sums./tot), 'descend');
         limit = min(size(rankedSums,2), W);
-        acceptedOnes = find(rankedSums(1:limit) >= 0.7);
+        acceptedOnes = find(rankedSums(1:limit) >= 0);
         acceptedIdxs = idxSums(acceptedOnes);
         bestCenters(i, :) = zeros(1, D);
         bestCenters(i, acceptedIdxs) = 1;
