@@ -38,7 +38,7 @@ labels = vals['labels']
 labels = labels[0]
 
 # Load cluster centers
-data = sio.loadmat('basic_cluster_results_ham.mat')
+data = sio.loadmat('full_conn_centers.mat')
 centers = data['bestCenters']
 print centers
 

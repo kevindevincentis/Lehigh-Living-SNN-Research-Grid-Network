@@ -21,7 +21,6 @@ grid = new grid_network(500, 0.23, 196)''')
 if (weightType.lower() == "trained"):
     weights = sio.loadmat('./trained_weights.mat')
     weights = weights['allWeights']
-    weights = weights[0]
     h('k = 0')
 
     for i in range(len(weights)):
@@ -30,7 +29,7 @@ if (weightType.lower() == "trained"):
         h('size = grid.outputs.object(k).curSize')
         h('double update[size]')
         for j in range(int(h.size)):
-            h.update[j] = weights[i][0][j]
+            h.update[j] = weights[i][j]
         h('grid.outputs.object(k).setInputWeights(&update)')
 
 # Load images to give to the network
@@ -84,7 +83,7 @@ for cur in range(trials):
 # Save the results
 results = {'results': results}
 if (weightType.lower() == "trained"):
-    sio.savemat('no_kmeans_trained_cluster_data', results)
+    sio.savemat('full_trained_cluster_data', results)
 else: sio.savemat('cluster_data', results)
 
 try:

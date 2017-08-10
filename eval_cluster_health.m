@@ -51,6 +51,7 @@ numCenters = size(bestCenters,1);
 if (lower(distance) == 'overlap')
     dist = W - dist;
 end
+dist
 realDist = zeros(45,1);
 counter = 1;
 for i = 1:numCenters

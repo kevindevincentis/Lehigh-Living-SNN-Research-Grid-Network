@@ -76,7 +76,7 @@ proc init() {
     }
 
     r.uniform(0,1)
-    initW.normal(0,0.0001)
+    initW.normal(0,1)
     // Create connections based on guassian distribution wrt distance
     for i = 0, numNeurons-1 {
         X = int(i%h)
@@ -96,7 +96,7 @@ proc init() {
             // If num <= prob, this means we have a successful connection
             if (num <= prob || (X > border && X < border + inputCols*2 && X%2 == 0)) {
                 w = initW.repick()
-                while (w <= 0 || w > 0.01) {w = r.repick()}
+                while (w <= 0 || w > 0.003) {w = r.repick()}
                 isInhibit = 0
                 for k = 0, numNeurons*inhibPerc-1{
                     if (i == inhibConns[k]) {isInhibit = 1}

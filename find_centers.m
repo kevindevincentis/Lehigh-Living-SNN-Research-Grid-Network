@@ -23,8 +23,8 @@ for i = 1:numDigits
 
     if (lower(distance) == 'hamming')
         % Find the median value
-        tot = size(data, 1);
-        sums = sum(data, 1);
+        tot = size(data, 1)
+        sums = sum(data, 1)
         bestCenters(i, :) = (sums./tot) > 0.5;
     end
 

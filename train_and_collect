@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "This is a shell script"
+python train_net.py 1000
+python collect_data.py trained ../MNIST/training_values_compressed.mat
