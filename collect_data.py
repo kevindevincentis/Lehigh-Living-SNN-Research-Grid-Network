@@ -56,10 +56,10 @@ results = [list() for i in range(10)] # Variable to save data
 # Run the simulation many times to collect data points
 trials = 1000
 for cur in range(trials):
-    print "Image %d" %(cur)
+    print "Image %d" %(cur + 10000)
 
     # Input the image
-    img = images[cur]
+    img = images[cur + 10000]
     h('numInputs = 1')
     h.numInputs = len(img)
     h('double img[numInputs]')
@@ -79,7 +79,7 @@ for cur in range(trials):
     for i in range(len(outputs)):
         outputs[i] = h.outputCounts[i].n
 
-    results[labels[cur]].append(copy.copy(outputs))
+    results[labels[cur + 10000]].append(copy.copy(outputs))
 
 # Save the results
 results = {'results': results}
