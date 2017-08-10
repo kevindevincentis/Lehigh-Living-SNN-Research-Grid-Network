@@ -1,12 +1,13 @@
 
 args = argv();
 distance = args{1};
-source = args{2};
+centerSource = args{2};
+dataSource = args{3};
 W = 30;
 
 % Load the results
 warning('off', 'Octave:broadcast');
-results = load(source);
+results = load(centerSource);
 bestIdx = results.bestIdx;
 bestDist = results.bestDist;
 if (lower(distance) == 'overlap')
@@ -14,7 +15,7 @@ if (lower(distance) == 'overlap')
 end
 bestCenters = results.bestCenters;
 
-data = load('new_trained_cluster_data.mat');
+data = load(dataSource);
 data = data.results;
 numDigits = size(data, 2);
 
