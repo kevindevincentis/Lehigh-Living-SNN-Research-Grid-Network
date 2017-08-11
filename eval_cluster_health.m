@@ -1,20 +1,33 @@
 
 args = argv();
 distance = args{1};
-source = args{2};
+centerSource = args{2};
+dataSource = args{3};
 W = 30;
 
 % Load the results
 warning('off', 'Octave:broadcast');
-results = load(source);
-bestIdx = results.bestIdx;
-bestDist = results.bestDist;
+results = load(centerSource);
+bestCenters = results.bestCenters;
+
+data = load(dataSource);
+data = data.results;
+numDigits = size(data, 2);
+
+allData = [cell2mat(data(1)); cell2mat(data(2)); cell2mat(data(3));
+cell2mat(data(4)); cell2mat(data(5)); cell2mat(data(6)); cell2mat(data(7));
+cell2mat(data(8)); cell2mat(data(9)); cell2mat(data(10))];
+
+[bestIdx, bestDist] = getDist(allData, bestCenters, distance);
 if (lower(distance) == 'overlap')
     bestDist = W - bestDist;
 end
-bestCenters = results.bestCenters;
-data = load('cluster_data.mat');
-data = data.results;
+
+% vals = load('../MNIST/training_values_compressed.mat');
+% images = vals.images > 1/100;
+% allNewData = images;
+% labels = vals.labels;
+% numDigits = 10;
 
 K = 15;
 lastEnd = 0;
@@ -23,8 +36,10 @@ rads = zeros(10,1);
 cluster_assignments = zeros(10,1);
 totalAcc = 0;
 totalPoints = 0;
-for digit = data
-    digit = cell2mat(digit);
+for i = 1:numDigits
+    % idxs = find(labels == (i-1));
+    % digit = images(idxs, :);
+    digit = cell2mat(data(i));
     [h, w] = size(digit);
     counts = zeros(K, 1);
 
@@ -37,7 +52,12 @@ for digit = data
     totalPoints = totalPoints + sum(counts);
     totalAcc = totalAcc + counts(winner);
 
-    printf('Digit %d, Assigned Cluster: %d, Accuracy: %d%%\n', actualDigit, winner, accuracy);
+    possibilities = find((bestIdx == winner));
+    rad = max(bestDist(possibilities, winner));
+    if (size(possibilities, 1) == 0)
+        rad = 0;
+    end
+    printf('Digit %d, Assigned Cluster: %d, Size: %d, Accuracy: %d%%\n', actualDigit, winner, rad, accuracy);
     lastEnd = lastEnd+h;
     actualDigit = actualDigit + 1;
 end
@@ -72,6 +92,8 @@ for i = 1:numCenters
 end
 
 avgPointDistance
+i = find(avgPointDistance > 0);
+meandPointDistance = mean(avgPointDistance(i))
 % Find overlap between clusters
 % overlaps = zeros(10,1);
 % counter = 1;
