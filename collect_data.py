@@ -2,7 +2,7 @@
 # Collects the output of a neural network after inputting images
 # The output is stored as follows: 3D list where...
 # 1st D is digit, 2nd D is output vector, 3rd D is value in a vector
-# User inputs the source of the input images and if the network has been trained  
+# User inputs the source of the input images and if the network has been trained
 import scipy.io as sio
 from neuron import h, gui
 from matplotlib import pyplot
@@ -54,9 +54,9 @@ outputs = [0] * int(h.grid.outputs.count())
 results = [list() for i in range(10)] # Variable to save data
 
 # Run the simulation many times to collect data points
-trials = 5000
+trials = 1000
 for cur in range(trials):
-    print "Image %d" %cur
+    print "Image %d" %(cur)
 
     # Input the image
     img = images[cur]
@@ -84,8 +84,8 @@ for cur in range(trials):
 # Save the results
 results = {'results': results}
 if (weightType.lower() == "trained"):
-    sio.savemat('trained_cluster_data', results)
-else: sio.savemat('cluster_data', results)
+    sio.savemat('new_trained_cluster_data', results)
+else: sio.savemat('new_cluster_data', results)
 
 try:
     input('Exit by pressing a key')
